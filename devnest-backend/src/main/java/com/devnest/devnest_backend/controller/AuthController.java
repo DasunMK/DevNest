@@ -1,22 +1,23 @@
 package com.devnest.devnest_backend.controller;
 
-import java.util.Collections;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;  // Use your own User model
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.devnest.devnest_backend.model.User;
 import com.devnest.devnest_backend.repository.UserRepository;
+
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -47,8 +48,10 @@ public class AuthController {
         newUser.setName(userRequest.getName());
         newUser.setEmail(userRequest.getEmail());
         newUser.setPassword(encodedPassword);
+        newUser.setPhone(userRequest.getPhone());
+        newUser.setGender(userRequest.getGender());
+        newUser.setGithub(userRequest.getGithub());
         newUser.setRoles(Collections.singletonList("USER")); // Default role is USER
-        newUser.setProfile(new User.Profile("", "", "")); // Empty profile initially
 
         // Save user to database
         userRepository.save(newUser);
@@ -59,7 +62,7 @@ public class AuthController {
     // Login User
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody User loginRequest) {
-        // Authenticate user using Spring Security
+        // Authenticate user using Spring Security's AuthenticationManager
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
@@ -70,8 +73,9 @@ public class AuthController {
 
     // User Profile (for role-based testing)
     @GetMapping("/profile")
-    public ResponseEntity<?> getUserProfile(@RequestParam String username) {
-        // Example of accessing the user profile. In a real application, you'd return user-specific data.
-        return ResponseEntity.ok("Welcome, " + username);
+    public ResponseEntity<?> getUserProfile(@RequestParam String username, Authentication authentication) {
+        // Access the authenticated user's name using Spring Security's Authentication object
+        String currentUser = authentication.getName();  // This gets the username of the authenticated user
+        return ResponseEntity.ok("Welcome, " + currentUser);
     }
 }
