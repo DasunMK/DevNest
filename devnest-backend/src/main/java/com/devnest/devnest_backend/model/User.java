@@ -1,17 +1,21 @@
 package com.devnest.devnest_backend.model;
 
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "users")
 public class User {
+
     @Id
     private String id;
     private String name;
     private String email;
+    private String password;
+    private String phone;  // Add phone field
+    private String gender;  // Add gender field
+    private String github;  // Add GitHub field
 
-    // Getters and Setters
+    // Getters and setters for all fields
     public String getId() {
         return id;
     }
@@ -34,5 +38,37 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getGithub() {
+        return github;
+    }
+
+    public void setGithub(String github) {
+        this.github = github;
     }
 }

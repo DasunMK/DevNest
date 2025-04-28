@@ -1,16 +1,16 @@
-// src/components/Register.js
 import React, { useState } from 'react';
-import { Box, Button, Checkbox, CssBaseline, Divider, FormControl, FormLabel, FormControlLabel, TextField, Typography, Stack, Card, styled } from '@mui/material';
+import axios from 'axios';  // Import Axios for making HTTP requests
+import { Box, Button, FormControl, FormLabel, TextField, Typography, Stack, Card, styled, Divider } from '@mui/material';
 import { Google as GoogleIcon, Facebook as FacebookIcon } from '@mui/icons-material';
 import { toast } from 'react-toastify';  // Import toast
 import { Link } from 'react-router-dom';  // Import Link from react-router-dom
 
+// Styling for Card and Container
 const CardStyled = styled(Card)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignSelf: 'center',
   width: '100%',
- 
   padding: theme.spacing(4),
   gap: theme.spacing(2),
   margin: 'auto',
@@ -19,7 +19,6 @@ const CardStyled = styled(Card)(({ theme }) => ({
   [theme.breakpoints.up('sm')]: {
     width: '450px',
   },
-  
 }));
 
 const SignUpContainer = styled(Stack)(({ theme }) => ({
@@ -29,10 +28,10 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
   [theme.breakpoints.up('sm')]: {
     padding: theme.spacing(4),
   },
-   // Light pink color
 }));
 
-export default function Register(props) {
+// Main Register Component
+export default function Register({ fetchUsers }) {  // Accept fetchUsers as prop
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState('');
   const [passwordError, setPasswordError] = useState(false);
@@ -81,20 +80,34 @@ export default function Register(props) {
   };
 
   const handleSubmit = (event) => {
+    event.preventDefault();  // Prevent default form submission
     if (nameError || emailError || passwordError) {
-      event.preventDefault();
       return;
     }
+
     const data = new FormData(event.currentTarget);
-    console.log({
+    const userData = {
       name: data.get('name'),
       email: data.get('email'),
       password: data.get('password'),
-      phone: phone,
-      gender: gender,
-      github: github,
-    });
-    toast.success("User registered successfully!");
+      phone: phone,  // Ensure phone is included
+      gender: gender,  // Ensure gender is included
+      github: github,  // Ensure GitHub is included
+    };
+
+    // Send POST request to backend to register the user
+    axios.post('http://localhost:8080/api/users', userData)
+      .then((response) => {
+        toast.success('User registered successfully!');
+        
+        // Fetch the updated users list from the backend
+        fetchUsers();  // This will trigger the parent component to fetch users again
+
+      })
+      .catch((error) => {
+        console.error('Error registering user', error);
+        toast.error('Error registering user');
+      });
   };
 
   return (
@@ -112,7 +125,7 @@ export default function Register(props) {
               required
               fullWidth
               id="name"
-              placeholder="Jon Snow"
+              placeholder=""
               error={nameError}
               helperText={nameErrorMessage}
               color={nameError ? 'error' : 'primary'}
@@ -124,7 +137,7 @@ export default function Register(props) {
               required
               fullWidth
               id="email"
-              placeholder="your@email.com"
+              placeholder=""
               name="email"
               autoComplete="email"
               variant="outlined"
@@ -139,7 +152,7 @@ export default function Register(props) {
               required
               fullWidth
               name="password"
-              placeholder="••••••"
+              placeholder=""
               type="password"
               id="password"
               autoComplete="new-password"
@@ -149,10 +162,11 @@ export default function Register(props) {
               color={passwordError ? 'error' : 'primary'}
             />
           </FormControl>
+          <FormLabel htmlFor="phone">phone</FormLabel>
           <TextField
             fullWidth
             type="text"
-            label="Phone"
+            label=""
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
@@ -166,16 +180,18 @@ export default function Register(props) {
               required
               style={{ padding: '10px 16px', fontSize: '16px' }} // Increase height using padding
             >
-              <option value="">Select Gender</option>
+              <option value=""></option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
               <option value="Other">Other</option>
             </select>
           </FormControl>
+         
+          <FormLabel htmlFor="phone">GitHub Username</FormLabel>
           <TextField
-            fullWidth
+            fullWidth 
             type="text"
-            label="GitHub Username"
+            label=""
             value={github}
             onChange={(e) => setGithub(e.target.value)}
           />

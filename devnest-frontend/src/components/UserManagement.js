@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';  // Import Axios for making HTTP requests
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import axios from 'axios'; // Import Axios for making HTTP requests
 import { toast } from 'react-toastify'; // Import toast for success/error messages
 
 const UserManagement = () => {
@@ -10,19 +10,23 @@ const UserManagement = () => {
 
   // Fetch users from the backend when the component mounts
   useEffect(() => {
-    axios.get('http://localhost:8080/api/users') // Replace with your backend API endpoint
+    fetchUsers();  // Fetch users when the component is first rendered
+  }, []);
+
+  const fetchUsers = () => {
+    axios.get('http://localhost:8080/api/users')  // Backend URL
       .then(response => {
-        setUsers(response.data); // Store users in the state
+        setUsers(response.data);  // Store users in the state
       })
       .catch(error => {
         console.error('Error fetching users:', error);
         toast.error('Error fetching users');
       });
-  }, []);
+  };
 
   // Handle delete user
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:8080/api/users/${id}`) // Replace with your backend delete endpoint
+    axios.delete(`http://localhost:8080/api/users/${id}`)  // Backend URL
       .then(response => {
         setUsers(users.filter(user => user.id !== id)); // Remove user from state
         toast.success('User deleted successfully!');
@@ -35,7 +39,7 @@ const UserManagement = () => {
 
   // Handle update user
   const handleUpdate = () => {
-    axios.put(`http://localhost:8080/api/users/${selectedUser.id}`, selectedUser) // Replace with your backend update endpoint
+    axios.put(`http://localhost:8080/api/users/${selectedUser.id}`, selectedUser)  // Backend URL
       .then(response => {
         setUsers(users.map(user => user.id === selectedUser.id ? selectedUser : user)); // Update user in state
         setOpenDialog(false);

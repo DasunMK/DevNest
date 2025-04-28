@@ -1,6 +1,5 @@
 package com.devnest.devnest_backend.controller;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,26 +28,20 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    // Create a new user
+    // Create new user
     @PostMapping
     public User createUser(@RequestBody User user) {
         return userRepository.save(user);
     }
 
-    // Get a user by ID
-    @GetMapping("/{id}")
-    public User getUserById(@PathVariable String id) {
-        return userRepository.findById(id).orElse(null);
-    }
-
-    // Update user by ID
+    // Update existing user
     @PutMapping("/{id}")
     public User updateUser(@PathVariable String id, @RequestBody User user) {
         user.setId(id);
         return userRepository.save(user);
     }
 
-    // Delete user by ID
+    // Delete a user
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable String id) {
         userRepository.deleteById(id);

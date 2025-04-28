@@ -37,8 +37,8 @@ const AvatarStyled = styled(Avatar)(({ theme }) => ({
 
 // Dummy Data for Testing
 const user = {
-  name: 'John Doe',
-  email: 'john@example.com',
+  name: 'Dasun Madusanka',
+  email: 'madusankedasun@gmail.com',
   profileImage: 'https://www.w3schools.com/w3images/avatar2.png',
 };
 

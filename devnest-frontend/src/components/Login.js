@@ -1,11 +1,10 @@
-// src/components/Login.js
 import React, { useState } from 'react';
 import { Box, Button, TextField, Typography, Stack, Card, styled, Divider } from '@mui/material';
 import { toast } from 'react-toastify'; // Import toast
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavigate from react-router-dom
 import axios from 'axios';  // Import axios to handle HTTP requests
 
-// Styled component for the login card with pink background
+// Styled component for the login card
 const CardStyled = styled(Card)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -19,7 +18,6 @@ const CardStyled = styled(Card)(({ theme }) => ({
   [theme.breakpoints.up('sm')]: {
     width: '450px',
   },
-  //backgroundColor: '#f8bbd0',  // Light pink background for the card
   borderRadius: '10px', // Rounded corners for the card
 }));
 
@@ -30,7 +28,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
   [theme.breakpoints.up('sm')]: {
     padding: theme.spacing(4),
   },
-  backgroundColor: '#f7f7f7',  // Optional: Background color for the container (you can keep it or modify it)
+  backgroundColor: '#f7f7f7',  // Background color for the container
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -39,7 +37,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const navigate = useNavigate();  // For navigation after successful login
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -47,11 +45,20 @@ const Login = () => {
     const userData = { email, password };
 
     try {
+      // Make API request to login
       const response = await axios.post('http://localhost:8080/api/auth/login', userData);
-      localStorage.setItem('authToken', response.data.token); // Save JWT token
-      toast.success('Login successful!');  // Success toast
+      
+      // Save the JWT token in localStorage
+      localStorage.setItem('authToken', response.data.token); 
+
+      // Show success toast
+      toast.success('Login successful!');
+      
+      // Redirect user to Dashboard after successful login
+      navigate('/dashboard');
     } catch (error) {
-      toast.error('Error logging in. Please check your credentials.');  // Error toast
+      // Show error toast if login fails
+      toast.error('Error logging in. Please check your credentials.');
     }
   };
 

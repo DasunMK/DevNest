@@ -12,6 +12,7 @@ import CodePostDisplay from './components/CodePostDisplay'; // To display code p
 import CodePostComments from './components/CodePostComments'; // To add comments to code posts
 import AllCodePosts from './components/AllCodePosts';  // To display all code posts
 import UserManagement from './components/UserManagement'; // Import UserManagement for managing users
+import Navbar from './components/Navbar'; // Import Navbar
 
 // Import Material-UI theme provider
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -29,43 +30,55 @@ const theme = createTheme({
 });
 
 const App = () => {
+  // Inline styles for background
+  const backgroundStyle = {
+    backgroundImage: "url('/images/background.jpg')",  // Path to your image
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    height: '100vh',  // Full viewport height
+    backgroundAttachment: 'fixed',
+  };
+
   return (
-    <ThemeProvider theme={theme}> {/* Wrap your app with ThemeProvider */}
-      <Router>
-        <div>
-          {/* Toast notifications */}
-          <ToastContainer />  {/* Add ToastContainer component here */}
+    <div style={backgroundStyle}>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <div>
+            <Navbar /> {/* Add the Navbar here */}
 
-          <Routes>
-            {/* Route for Register page */}
-            <Route path="/register" element={<Register />} />
+            {/* Toast notifications */}
+            <ToastContainer />  {/* Add ToastContainer component here */}
 
-            {/* Route for Login page */}
-            <Route path="/login" element={<Login />} />
+            <Routes>
+              {/* Route for Register page */}
+              <Route path="/register" element={<Register />} />
 
-            {/* Route for Dashboard page (No login required) */}
-            <Route path="/dashboard" element={<Dashboard />} />
+              {/* Route for Login page */}
+              <Route path="/login" element={<Login />} />
 
-            {/* Route for User Management page (No login required) */}
-            <Route path="/usermanagement" element={<UserManagement />} />
+              {/* Route for Dashboard page */}
+              <Route path="/dashboard" element={<Dashboard />} />
 
-            {/* Route for Creating a new code post */}
-            <Route path="/codepost/new" element={<CodePostForm />} />
+              {/* Route for User Management page */}
+              <Route path="/usermanagement" element={<UserManagement />} />
 
-            {/* Route for Displaying all code posts */}
-            <Route path="/codeposts" element={<AllCodePosts />} />
+              {/* Route for Creating a new code post */}
+              <Route path="/codepost/new" element={<CodePostForm />} />
 
-            {/* Route for Displaying a single code post with syntax highlighting */}
-            <Route path="/codepost/:id" element={<CodePostDisplay />} />
+              {/* Route for Displaying all code posts */}
+              <Route path="/codeposts" element={<AllCodePosts />} />
 
-            {/* Route for adding comments to a specific code post */}
-            <Route path="/codepost/:id/comments" element={<CodePostComments />} />
-          </Routes>
-        </div>
-      </Router>
-    </ThemeProvider>  
+              {/* Route for Displaying a single code post with syntax highlighting */}
+              <Route path="/codepost/:id" element={<CodePostDisplay />} />
+
+              {/* Route for adding comments to a specific code post */}
+              <Route path="/codepost/:id/comments" element={<CodePostComments />} />
+            </Routes>
+          </div>
+        </Router>
+      </ThemeProvider>
+    </div>
   );
 };
 
 export default App;
-
