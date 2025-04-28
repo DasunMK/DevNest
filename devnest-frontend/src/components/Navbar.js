@@ -1,10 +1,9 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';  // Added Link import here
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';  // Import Link and useNavigate
 import { AppBar, Toolbar, Button, Typography, Container, Box } from '@mui/material';
-import { useState, useEffect } from 'react';  // For detecting login state
 
 const Navbar = () => {
-  const navigate = useNavigate(); // To navigate after logout
+  const navigate = useNavigate(); // For navigation after logout
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Check if user is logged in by looking for a token in localStorage
@@ -30,11 +29,18 @@ const Navbar = () => {
           </Typography>
           
           <Box>
-            {/* Replacing Home button with Dashboard */}
+            {/* Dashboard button */}
             <Button color="inherit" onClick={() => navigate('/dashboard')}>
               Dashboard
             </Button>
-            
+
+            {/* Add New Code Post Button */}
+            {isLoggedIn && (
+              <Button color="inherit" onClick={() => navigate('/codepost/new')}>
+                Add New Code Post
+              </Button>
+            )}
+
             {isLoggedIn ? (
               <>
                 <Button color="inherit" onClick={handleLogout}>
