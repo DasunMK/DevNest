@@ -7,11 +7,11 @@ import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for Toast
 import Register from './components/Register';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';  // Import Dashboard
-import ProtectedRoute from './components/ProtectedRoute';  // Protected route to guard the Dashboard
 import CodePostForm from './components/CodePostForm';  // Form for creating a new code post
 import CodePostDisplay from './components/CodePostDisplay'; // To display code posts with syntax highlighting
 import CodePostComments from './components/CodePostComments'; // To add comments to code posts
 import AllCodePosts from './components/AllCodePosts';  // To display all code posts
+import UserManagement from './components/UserManagement'; // Import UserManagement for managing users
 
 // Import Material-UI theme provider
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -43,12 +43,11 @@ const App = () => {
             {/* Route for Login page */}
             <Route path="/login" element={<Login />} />
 
-            {/* ProtectedRoute for Dashboard page */}
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Dashboard />  {/* Show the Dashboard component */}
-              </ProtectedRoute>
-            } />
+            {/* Route for Dashboard page (No login required) */}
+            <Route path="/dashboard" element={<Dashboard />} />
+
+            {/* Route for User Management page (No login required) */}
+            <Route path="/usermanagement" element={<UserManagement />} />
 
             {/* Route for Creating a new code post */}
             <Route path="/codepost/new" element={<CodePostForm />} />
@@ -69,3 +68,4 @@ const App = () => {
 };
 
 export default App;
+
