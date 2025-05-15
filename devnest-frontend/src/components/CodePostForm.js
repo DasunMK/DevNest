@@ -12,7 +12,7 @@ const FormContainer = styled(Card)(({ theme }) => ({
   flexDirection: 'column',
   alignSelf: 'center',
   width: '100%',
-  padding: theme.spacing(4),
+  padding: theme.spacing(9), // Adjust this padding to increase overall space
   gap: theme.spacing(2),
   margin: 'auto',
   boxShadow: 'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
@@ -68,9 +68,9 @@ const CodePostForm = () => {
   };
 
   return (
-    <FormContainer>
+    <FormContainer sx={{ marginTop: 4 }}> {/* Added space from the top of the container */}
       <Typography variant="h4" gutterBottom>
-        Create / Edit Code Post
+        Add Code Post
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {/* Title */}
@@ -118,9 +118,24 @@ const CodePostForm = () => {
             <MenuItem value="JavaScript">JavaScript</MenuItem>
             <MenuItem value="Python">Python</MenuItem>
             <MenuItem value="Java">Java</MenuItem>
-            {/* Add more programming languages here */}
+            <MenuItem value="C++">C++</MenuItem>
+            <MenuItem value="C#">C#</MenuItem>
+            <MenuItem value="Ruby">Ruby</MenuItem>
+            <MenuItem value="Go">Go</MenuItem>
+            <MenuItem value="Swift">Swift</MenuItem>
+            <MenuItem value="PHP">PHP</MenuItem>
+            <MenuItem value="HTML/CSS">HTML/CSS</MenuItem>
+            <MenuItem value="TypeScript">TypeScript</MenuItem>
+            <MenuItem value="SQL">SQL</MenuItem>
+            <MenuItem value="Kotlin">Kotlin</MenuItem>
+            <MenuItem value="R">R</MenuItem>
+            <MenuItem value="Rust">Rust</MenuItem>
+            <MenuItem value="MATLAB">MATLAB</MenuItem>
+            <MenuItem value="Shell">Shell</MenuItem>
+            <MenuItem value="Dart">Dart</MenuItem>
           </Select>
         </FormControl>
+
 
         {/* Submit Button */}
         <Button type="submit" variant="contained" sx={{ marginTop: 2 }}>

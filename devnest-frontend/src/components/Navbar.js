@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';  // Import useLocation along with Link and useNavigate
 import { AppBar, Toolbar, Button, Typography, Container, Box, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu'; // For mobile menu icon
-import { styled } from '@mui/system';
+import { height, styled } from '@mui/system';
 
 // Styled components for responsiveness
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  backgroundColor: '#1976d2',
+  backgroundColor: '#222831',
   [theme.breakpoints.up('sm')]: {
-    padding: '0 20px',
+    padding: '20px',
+    height :'150px',
   },
   [theme.breakpoints.down('sm')]: {
     padding: '0 10px',
@@ -44,7 +45,7 @@ const Navbar = () => {
       <Container>
         <Toolbar sx={{ justifyContent: 'space-between' }}>
           {/* Logo and Title */}
-          <Typography variant="h6" sx={{ color: '#fff' }}>
+          <Typography variant="h4" sx={{ color: '#fff' }}>
             DevNest
           </Typography>
           
@@ -108,7 +109,7 @@ const Navbar = () => {
                 top: '60px',
                 left: 0,
                 width: '100%',
-                backgroundColor: '#1976d2',
+                backgroundColor: '#222831',
                 zIndex: 1,
                 display: 'flex',
                 flexDirection: 'column',
