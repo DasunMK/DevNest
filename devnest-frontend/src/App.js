@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify'; // Import ToastContainer
 import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for Toast
 
@@ -50,6 +50,9 @@ const App = () => {
             <ToastContainer />  {/* Add ToastContainer component here */}
 
             <Routes>
+              {/* Redirect to /login when app first loads */}
+              <Route path="/" element={<Navigate to="/login" />} />
+
               {/* Route for Register page */}
               <Route path="/register" element={<Register />} />
 

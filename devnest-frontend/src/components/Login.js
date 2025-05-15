@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Box, Button, TextField, Typography, Stack, Card, styled, Divider } from '@mui/material';
 import { toast } from 'react-toastify'; // Import toast
 import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavigate from react-router-dom
-import axios from 'axios';  // Import axios to handle HTTP requests
 
 // Styled component for the login card
 const CardStyled = styled(Card)(({ theme }) => ({
@@ -39,25 +38,25 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();  // For navigation after successful login
 
+  // Hardcoded username and password
+  const hardcodedEmail = 'admin@gmail.com';
+  const hardcodedPassword = 'admin@123';
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const userData = { email, password };
-
-    try {
-      // Make API request to login
-      const response = await axios.post('http://localhost:8080/api/auth/login', userData);
-      
-      // Save the JWT token in localStorage
-      localStorage.setItem('authToken', response.data.token); 
-
-      // Show success toast
+    // Check if the input email and password match the hardcoded values
+    if (email === hardcodedEmail && password === hardcodedPassword) {
+      // If they match, show success toast
       toast.success('Login successful!');
+      
+      // Save a fake JWT token in localStorage (for the sake of this example)
+      localStorage.setItem('authToken', 'fake-jwt-token');
       
       // Redirect user to Dashboard after successful login
       navigate('/dashboard');
-    } catch (error) {
-      // Show error toast if login fails
+    } else {
+      // If they don't match, show error toast
       toast.error('Error logging in. Please check your credentials.');
     }
   };
