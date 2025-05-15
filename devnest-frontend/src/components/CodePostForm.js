@@ -6,19 +6,35 @@ import { styled } from '@mui/material/styles';
 import { toast } from 'react-toastify';  // Import toast for notifications
 import 'react-toastify/dist/ReactToastify.css';  // Import the CSS for Toast
 
-// Styling the form container similar to Register.js page
+// Styling the form container with improved width and spacing
 const FormContainer = styled(Card)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignSelf: 'center',
   width: '100%',
-  padding: theme.spacing(9), // Adjust this padding to increase overall space
-  gap: theme.spacing(2),
+  padding: theme.spacing(5), // Increased padding for more space
+  gap: theme.spacing(3), // Increased gap between form elements
   margin: 'auto',
-  boxShadow: 'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
+  boxShadow: theme.shadows[10],  // Added stronger box shadow
+  textAlign: 'center',
+  borderRadius: '16px', // Rounded corners for a modern look
   [theme.breakpoints.up('sm')]: {
-    width: '450px',
+    width: '500px',  // Slightly wider on larger screens (md breakpoint)
   },
+  [theme.breakpoints.up('md')]: {
+    width: '600px',  // Increase width further on large screens (lg breakpoint)
+  },
+  [theme.breakpoints.up('lg')]: {
+    width: '650px',  // Maximum width for very large screens
+  },
+  backgroundColor: '#fff',
+}));
+
+const SectionTitle = styled(Typography)(({ theme }) => ({
+  marginBottom: theme.spacing(3),
+  fontWeight: 'bold',
+  fontSize: '1.8rem',
+  color: theme.palette.primary.main,
 }));
 
 const CodePostForm = () => {
@@ -68,86 +84,90 @@ const CodePostForm = () => {
   };
 
   return (
-    <FormContainer sx={{ marginTop: 4 }}> {/* Added space from the top of the container */}
-      <Typography variant="h4" gutterBottom>
-        Add Code Post
-      </Typography>
-      <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        {/* Title */}
-        <TextField
-          label="Title"
-          variant="outlined"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}  // Make sure state is updating correctly
-          required
-          fullWidth
-        />
-
-        {/* Description */}
-        <TextField
-          label="Description"
-          variant="outlined"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}  // State updates on each keystroke
-          required
-          multiline
-          rows={4}
-          fullWidth
-        />
-
-        {/* Code */}
-        <TextField
-          label="Code"
-          variant="outlined"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}  // State updates on each keystroke
-          required
-          multiline
-          rows={6}
-          fullWidth
-        />
-
-        {/* Programming Language */}
-        <FormControl fullWidth>
-          <InputLabel>Programming Language</InputLabel>
-          <Select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
+    <Box sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
+      <FormContainer>
+        <Typography variant="h4" gutterBottom sx={{ color: '#1976d2' }}>
+          {id ? 'Edit Code Post' : 'Add Code Post'}  {/* Title dynamically changes */}
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          {/* Title */}
+          <TextField
+            label="Title"
+            variant="outlined"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}  // Make sure state is updating correctly
             required
-          >
-            <MenuItem value="JavaScript">JavaScript</MenuItem>
-            <MenuItem value="Python">Python</MenuItem>
-            <MenuItem value="Java">Java</MenuItem>
-            <MenuItem value="C++">C++</MenuItem>
-            <MenuItem value="C#">C#</MenuItem>
-            <MenuItem value="Ruby">Ruby</MenuItem>
-            <MenuItem value="Go">Go</MenuItem>
-            <MenuItem value="Swift">Swift</MenuItem>
-            <MenuItem value="PHP">PHP</MenuItem>
-            <MenuItem value="HTML/CSS">HTML/CSS</MenuItem>
-            <MenuItem value="TypeScript">TypeScript</MenuItem>
-            <MenuItem value="SQL">SQL</MenuItem>
-            <MenuItem value="Kotlin">Kotlin</MenuItem>
-            <MenuItem value="R">R</MenuItem>
-            <MenuItem value="Rust">Rust</MenuItem>
-            <MenuItem value="MATLAB">MATLAB</MenuItem>
-            <MenuItem value="Shell">Shell</MenuItem>
-            <MenuItem value="Dart">Dart</MenuItem>
-          </Select>
-        </FormControl>
+            fullWidth
+            sx={{ backgroundColor: '#f9f9f9', borderRadius: '8px' }}  // Lighter background for input
+          />
 
+          {/* Description */}
+          <TextField
+            label="Description"
+            variant="outlined"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}  // State updates on each keystroke
+            required
+            multiline
+            rows={4}
+            fullWidth
+            sx={{ backgroundColor: '#f9f9f9', borderRadius: '8px' }}  // Lighter background for input
+          />
 
-        {/* Submit Button */}
-        <Button type="submit" variant="contained" sx={{ marginTop: 2 }}>
-          Save Code Post
-        </Button>
-      </Box>
+          {/* Code */}
+          <TextField
+            label="Code"
+            variant="outlined"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}  // State updates on each keystroke
+            required
+            multiline
+            rows={6}
+            fullWidth
+            sx={{ backgroundColor: '#f9f9f9', borderRadius: '8px' }}  // Lighter background for input
+          />
 
-      <Divider sx={{ marginTop: 2 }} />
-      <Typography variant="body2" sx={{ textAlign: 'center', marginTop: 1 }}>
-        Need help? Check out our <a href="/help">Help Center</a>
-      </Typography>
-    </FormContainer>
+          {/* Programming Language */}
+          <FormControl fullWidth sx={{ backgroundColor: '#f9f9f9', borderRadius: '8px' }}>
+            <InputLabel>Programming Language</InputLabel>
+            <Select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              required
+            >
+              <MenuItem value="JavaScript">JavaScript</MenuItem>
+              <MenuItem value="Python">Python</MenuItem>
+              <MenuItem value="Java">Java</MenuItem>
+              <MenuItem value="C++">C++</MenuItem>
+              <MenuItem value="C#">C#</MenuItem>
+              <MenuItem value="Ruby">Ruby</MenuItem>
+              <MenuItem value="Go">Go</MenuItem>
+              <MenuItem value="Swift">Swift</MenuItem>
+              <MenuItem value="PHP">PHP</MenuItem>
+              <MenuItem value="HTML/CSS">HTML/CSS</MenuItem>
+              <MenuItem value="TypeScript">TypeScript</MenuItem>
+              <MenuItem value="SQL">SQL</MenuItem>
+              <MenuItem value="Kotlin">Kotlin</MenuItem>
+              <MenuItem value="R">R</MenuItem>
+              <MenuItem value="Rust">Rust</MenuItem>
+              <MenuItem value="MATLAB">MATLAB</MenuItem>
+              <MenuItem value="Shell">Shell</MenuItem>
+              <MenuItem value="Dart">Dart</MenuItem>
+            </Select>
+          </FormControl>
+
+          {/* Submit Button */}
+          <Button type="submit" variant="contained" sx={{ marginTop: 3, backgroundColor: '#1976d2' }}>
+            Save Post
+          </Button>
+        </Box>
+
+        <Divider sx={{ marginTop: 2 }} />
+        <Typography variant="body2" sx={{ textAlign: 'center', marginTop: 2, color: '#1976d2' }}>
+          Need help? Check out our <a href="/help" style={{ textDecoration: 'none', color: '#1976d2' }}>Help Center</a>
+        </Typography>
+      </FormContainer>
+    </Box>
   );
 };
 
