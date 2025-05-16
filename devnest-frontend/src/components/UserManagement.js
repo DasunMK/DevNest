@@ -11,10 +11,11 @@ import 'jspdf-autotable';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // Fetch users from backend
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -23,6 +24,7 @@ const UserManagement = () => {
     axios.get('http://localhost:8080/api/users')
       .then(response => {
         setUsers(response.data);
+        setFilteredUsers(response.data); // Initialize filteredUsers
       })
       .catch(error => {
         console.error('Error fetching users:', error);
@@ -33,7 +35,9 @@ const UserManagement = () => {
   const handleDelete = (id) => {
     axios.delete(`http://localhost:8080/api/users/${id}`)
       .then(() => {
-        setUsers(users.filter(user => user.id !== id));
+        const updatedUsers = users.filter(user => user.id !== id);
+        setUsers(updatedUsers);
+        setFilteredUsers(updatedUsers);
         toast.success('User deleted successfully!');
       })
       .catch(error => {
@@ -45,7 +49,11 @@ const UserManagement = () => {
   const handleUpdate = () => {
     axios.put(`http://localhost:8080/api/users/${selectedUser.id}`, selectedUser)
       .then(() => {
-        setUsers(users.map(user => user.id === selectedUser.id ? selectedUser : user));
+        const updatedUsers = users.map(user =>
+          user.id === selectedUser.id ? selectedUser : user
+        );
+        setUsers(updatedUsers);
+        setFilteredUsers(updatedUsers);
         setOpenDialog(false);
         toast.success('User updated successfully!');
       })
@@ -69,7 +77,17 @@ const UserManagement = () => {
     setSelectedUser({ ...selectedUser, [name]: value });
   };
 
-  // PDF generation function
+  const handleSearch = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+
+    const filtered = users.filter(user =>
+      user.name.toLowerCase().includes(term.toLowerCase()) ||
+      user.email.toLowerCase().includes(term.toLowerCase())
+    );
+    setFilteredUsers(filtered);
+  };
+
   const generatePDF = () => {
     const doc = new jsPDF();
     doc.text('User Report', 14, 15);
@@ -77,7 +95,7 @@ const UserManagement = () => {
     const tableColumn = ["Name", "Email", "Phone", "Gender", "GitHub"];
     const tableRows = [];
 
-    users.forEach(user => {
+    filteredUsers.forEach(user => {
       const userData = [
         user.name,
         user.email,
@@ -98,32 +116,41 @@ const UserManagement = () => {
   };
 
   return (
-    <div>
+    <div style={{ padding: '24px' }}>
       <h1>User Management</h1>
 
-      <Button
-        variant="contained"
-        color="success"
-        onClick={generatePDF}
-        style={{ marginBottom: '15px' }}
-      >
-        Export as PDF
-      </Button>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
+        <TextField
+          label="Search by name or email"
+          variant="outlined"
+          value={searchTerm}
+          onChange={handleSearch}
+          style={{ width: '300px' }}
+        />
+
+        <Button
+          variant="contained"
+          color="success"
+          onClick={generatePDF}
+        >
+          Generate PDF
+        </Button>
+      </div>
 
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Phone</TableCell>
-              <TableCell>Gender</TableCell>
-              <TableCell>GitHub</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell><strong>Name</strong></TableCell>
+              <TableCell><strong>Email</strong></TableCell>
+              <TableCell><strong>Phone</strong></TableCell>
+              <TableCell><strong>Gender</strong></TableCell>
+              <TableCell><strong>GitHub</strong></TableCell>
+              <TableCell><strong>Actions</strong></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map(user => (
+            {filteredUsers.map(user => (
               <TableRow key={user.id}>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
@@ -149,11 +176,17 @@ const UserManagement = () => {
                 </TableCell>
               </TableRow>
             ))}
+            {filteredUsers.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} align="center">
+                  No users found.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
 
-      {/* Update Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Update User</DialogTitle>
         <DialogContent>
