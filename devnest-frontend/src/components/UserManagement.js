@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';  // Import Axios for making HTTP requests
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { toast } from 'react-toastify'; // Import toast for success/error messages
+import axios from 'axios';
+import {
+  Button, Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Paper, TextField,
+  Dialog, DialogActions, DialogContent, DialogTitle
+} from '@mui/material';
+import { toast } from 'react-toastify';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // Fetch users from the backend when the component mounts
+  // Fetch users from backend
   useEffect(() => {
-    fetchUsers();  // Fetch users when the component is first rendered
+    fetchUsers();
   }, []);
 
   const fetchUsers = () => {
-    axios.get('http://localhost:8080/api/users')  // Backend URL
+    axios.get('http://localhost:8080/api/users')
       .then(response => {
-        setUsers(response.data);  // Store users in the state
+        setUsers(response.data);
       })
       .catch(error => {
         console.error('Error fetching users:', error);
@@ -24,11 +30,10 @@ const UserManagement = () => {
       });
   };
 
-  // Handle delete user
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:8080/api/users/${id}`)  // Backend URL
-      .then(response => {
-        setUsers(users.filter(user => user.id !== id)); // Remove user from state
+    axios.delete(`http://localhost:8080/api/users/${id}`)
+      .then(() => {
+        setUsers(users.filter(user => user.id !== id));
         toast.success('User deleted successfully!');
       })
       .catch(error => {
@@ -37,11 +42,10 @@ const UserManagement = () => {
       });
   };
 
-  // Handle update user
   const handleUpdate = () => {
-    axios.put(`http://localhost:8080/api/users/${selectedUser.id}`, selectedUser)  // Backend URL
-      .then(response => {
-        setUsers(users.map(user => user.id === selectedUser.id ? selectedUser : user)); // Update user in state
+    axios.put(`http://localhost:8080/api/users/${selectedUser.id}`, selectedUser)
+      .then(() => {
+        setUsers(users.map(user => user.id === selectedUser.id ? selectedUser : user));
         setOpenDialog(false);
         toast.success('User updated successfully!');
       })
@@ -51,26 +55,60 @@ const UserManagement = () => {
       });
   };
 
-  // Open dialog to update user
   const handleOpenDialog = (user) => {
     setSelectedUser(user);
     setOpenDialog(true);
   };
 
-  // Close dialog
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
 
-  // Handle input change in the dialog
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setSelectedUser({ ...selectedUser, [name]: value });
   };
 
+  // PDF generation function
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    doc.text('User Report', 14, 15);
+
+    const tableColumn = ["Name", "Email", "Phone", "Gender", "GitHub"];
+    const tableRows = [];
+
+    users.forEach(user => {
+      const userData = [
+        user.name,
+        user.email,
+        user.phone,
+        user.gender,
+        user.github
+      ];
+      tableRows.push(userData);
+    });
+
+    doc.autoTable({
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+    });
+
+    doc.save('user_report.pdf');
+  };
+
   return (
     <div>
       <h1>User Management</h1>
+
+      <Button
+        variant="contained"
+        color="success"
+        onClick={generatePDF}
+        style={{ marginBottom: '15px' }}
+      >
+        Export as PDF
+      </Button>
 
       <TableContainer component={Paper}>
         <Table>
@@ -93,10 +131,19 @@ const UserManagement = () => {
                 <TableCell>{user.gender}</TableCell>
                 <TableCell>{user.github}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleOpenDialog(user)} variant="outlined" color="primary">
+                  <Button
+                    onClick={() => handleOpenDialog(user)}
+                    variant="outlined"
+                    color="primary"
+                  >
                     Update
                   </Button>
-                  <Button onClick={() => handleDelete(user.id)} variant="outlined" color="secondary" style={{ marginLeft: '10px' }}>
+                  <Button
+                    onClick={() => handleDelete(user.id)}
+                    variant="outlined"
+                    color="secondary"
+                    style={{ marginLeft: '10px' }}
+                  >
                     Delete
                   </Button>
                 </TableCell>
@@ -106,7 +153,7 @@ const UserManagement = () => {
         </Table>
       </TableContainer>
 
-      {/* Update User Dialog */}
+      {/* Update Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Update User</DialogTitle>
         <DialogContent>
@@ -156,12 +203,8 @@ const UserManagement = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleUpdate} color="primary">
-            Save
-          </Button>
+          <Button onClick={handleCloseDialog} color="primary">Cancel</Button>
+          <Button onClick={handleUpdate} color="primary">Save</Button>
         </DialogActions>
       </Dialog>
     </div>
